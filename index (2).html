@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b6e66">
+<title>Spotspeak: Learn the words of the place you are standing in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f5f8;--sf:#fff;--tx:#0f1b2d;--mu:#5d6b7e;--br:#0b6e66;--brtx:#fff;--tint:#e4f3f1;--ln:#e3e8ee;--am:#a34a06;--amb:#fff6e6;--amL:#f3d7a2;--ok:#15803d;--bad:#b91c1c;--h1:#0b6e66;--h2:#0f4c75;--sh:0 1px 2px rgba(15,27,45,.05),0 6px 18px rgba(15,27,45,.06);color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1118;--sf:#171d28;--tx:#eef1f7;--mu:#9aa5b8;--br:#2dd4bf;--brtx:#05201c;--tint:#12302d;--ln:#273041;--am:#fbbf24;--amb:#2e2410;--amL:#5c4818;--ok:#4ade80;--bad:#f87171;--h1:#0e5a54;--h2:#12405e;--sh:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1118;--sf:#171d28;--tx:#eef1f7;--mu:#9aa5b8;--br:#2dd4bf;--brtx:#05201c;--tint:#12302d;--ln:#273041;--am:#fbbf24;--amb:#2e2410;--amL:#5c4818;--ok:#4ade80;--bad:#f87171;--h1:#0e5a54;--h2:#12405e;--sh:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:12}
+.ku{font-family:"Noto Sans Arabic","Noto Naskh Arabic",Tahoma,"Segoe UI",sans-serif;direction:rtl;unicode-bidi:isolate}
+#app{max-width:480px;margin:0 auto;padding:0 16px 108px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:7;display:flex;justify-content:space-between;align-items:center;padding:12px 0;background:var(--bg)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.02em}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.sb{justify-content:space-between}
+button{font:inherit;font-weight:600;font-size:14px;color:inherit;cursor:pointer;border:1px solid var(--ln);background:var(--sf);border-radius:12px;padding:10px 14px;transition:transform .08s,opacity .2s}
+button:active{transform:scale(.97)}button:disabled{opacity:.45;cursor:not-allowed}
+.pill{border-radius:999px;padding:7px 12px;font-size:13px}
+.bp{background:var(--br);color:var(--brtx);border-color:var(--br)}
+.hero{background:linear-gradient(135deg,var(--h1),var(--h2));color:#fff;border-radius:22px;padding:18px;box-shadow:var(--sh)}
+.ht{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.eb{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+.h1{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin:2px 0 4px}.hs{font-size:13px;opacity:.88}
+.hi{width:60px;height:60px;border-radius:18px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-size:30px;flex:none}
+.chips{display:flex;gap:8px;overflow-x:auto;margin:16px -4px 0;padding:2px 4px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.hero button.c{flex:none;border-radius:999px;padding:8px 13px;font-size:13px;background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.28)}
+.hero button.c.on{background:#fff;color:#0b4d47;border-color:#fff}
+.hb{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:8px}
+.sg{display:inline-flex;background:rgba(0,0,0,.24);border-radius:12px;padding:3px}
+.sg button{border:0;background:none;color:#fff;padding:6px 12px;border-radius:9px;font-size:12.5px}.sg button.on{background:#fff;color:#0b4d47}
+.gps{font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:6px}.gps i{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 3px rgba(74,222,128,.3)}.gps.off i{background:#fca5a5;box-shadow:0 0 0 3px rgba(252,165,165,.3)}
+h2{font-size:17px;font-weight:700;letter-spacing:-.01em;margin:22px 0 8px}h3{font-size:15px;margin:0;font-weight:700}
+.mu{color:var(--mu)}.tag{color:var(--mu);font-size:12.5px}.ok{color:var(--ok)}.bad{color:var(--bad)}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:18px;padding:14px;margin:12px 0;box-shadow:var(--sh)}
+.sp{background:var(--amb);border:1px solid var(--amL);border-radius:18px;padding:14px;margin:14px 0 4px}
+.bd{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--am);background:rgba(163,74,6,.12);padding:3px 9px;border-radius:999px}
+.bar{height:8px;background:var(--ln);border-radius:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--br);border-radius:6px;transition:width .4s}
+.cnt{font-size:12px;font-weight:700;background:var(--tint);color:var(--br);padding:3px 10px;border-radius:999px}
+.wc{display:flex;gap:12px;align-items:center;background:var(--sf);border:1px solid var(--ln);border-radius:18px;padding:12px;margin:10px 0;box-shadow:var(--sh)}
+.wi{width:54px;height:54px;border-radius:16px;background:var(--tint);display:grid;place-items:center;font-size:28px;flex:none}
+.wm{flex:1;min-width:0}.w1{font-size:19px;font-weight:700;line-height:1.2}.w2{font-size:19px;color:var(--br);font-weight:600;line-height:1.5}.w3{font-size:12.5px;color:var(--mu)}
+.wa{display:flex;flex-direction:column;gap:6px}
+.ib{width:42px;height:42px;padding:0;display:grid;place-items:center;border-radius:13px}.ib.dn{background:var(--tint);color:var(--ok);border-color:transparent}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--sf);border-top:1px solid var(--ln);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom,0px);z-index:8}
+nav div{display:flex;max-width:480px;width:100%;padding:6px 6px 4px}
+nav button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;font-size:11.5px;font-weight:600;color:var(--mu)}
+nav button b{display:grid;place-items:center;width:52px;height:30px;border-radius:999px}nav button.on{color:var(--br)}nav button.on b{background:var(--tint)}
+.seg2{display:flex;background:var(--ln);border-radius:13px;padding:3px;margin-top:14px;gap:2px}.seg2 button{flex:1;border:0;background:none;padding:8px 4px;border-radius:10px;font-size:13px;color:var(--mu)}.seg2 button.on{background:var(--sf);color:var(--tx);box-shadow:var(--sh)}
+.opt{display:block;width:100%;text-align:start;margin-top:8px;padding:12px 14px;font-size:16px}.opt.ok{border-color:var(--ok);background:rgba(21,128,61,.1)}.opt.bad{border-color:var(--bad);background:rgba(185,28,28,.08)}
+.big{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.vf{border:2px dashed var(--ln);border-radius:18px;padding:22px;text-align:center;background:var(--tint)}.vf svg.i{width:34px;height:34px;color:var(--br)}
+.tiles{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.tile{width:54px;height:54px;border-radius:15px;background:var(--sf);border:1px solid var(--ln);display:grid;place-items:center;font-size:27px;padding:0}
+.chip{display:inline-block;padding:8px 12px;border:1px solid var(--ln);border-radius:999px;margin:4px 4px 0 0;cursor:pointer;background:var(--sf);font-weight:600;font-size:14px}
+img.pv{width:100%;max-height:220px;object-fit:cover;border-radius:14px;margin:10px 0}
+.pts{background:linear-gradient(135deg,var(--h1),var(--h2));color:#fff;border-radius:22px;padding:18px;box-shadow:var(--sh)}
+.pts .big{font-size:40px}.trk{position:relative;height:10px;background:rgba(255,255,255,.22);border-radius:6px;margin:16px 0 22px}.trk i{display:block;height:100%;background:#fff;border-radius:6px}
+.trk u{position:absolute;top:-4px;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid #0f4c75;text-decoration:none;transform:translateX(-50%)}.trk s{position:absolute;top:20px;transform:translateX(-50%);font-size:11px;text-decoration:none;white-space:nowrap;opacity:.9}
+.sw{position:relative;width:48px;height:28px;flex:none}.sw input{opacity:0;position:absolute;inset:0;margin:0;cursor:pointer;z-index:2}.sw span{position:absolute;inset:0;background:var(--ln);border-radius:20px;transition:.2s}.sw span::after{content:"";position:absolute;width:22px;height:22px;top:3px;left:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}.sw input:checked+span{background:var(--br)}.sw input:checked+span::after{left:23px}
+.cp{display:flex;background:var(--sf);border:1px solid var(--ln);border-radius:18px;margin:12px 0;overflow:hidden;box-shadow:var(--sh)}.cp>div:first-child{background:var(--br);color:var(--brtx);padding:14px 12px;display:grid;place-items:center;font-weight:800;font-size:22px;min-width:76px;text-align:center}.cp>div:last-child{padding:12px 14px;border-inline-start:2px dashed var(--ln)}
+.code{font-size:22px;font-weight:800;letter-spacing:.12em;font-variant-numeric:tabular-nums}
+.pr{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--ln)}.pr:last-child{border:0}.pr span:last-child{font-weight:700;color:var(--br);text-align:end;white-space:nowrap}
+label.f{display:block;font-size:13px;margin-top:12px;color:var(--mu)}label.f b{color:var(--tx)}input[type=range]{width:100%;accent-color:var(--br)}
+.kp{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.kp div{background:var(--tint);border-radius:14px;padding:10px 12px}.kp b{display:block;font-size:19px;font-weight:800}.kp small{color:var(--mu);font-size:12px}
+select,input[type=text]{font:inherit;color:var(--tx);background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:11px 12px;width:100%}
+.ov{position:fixed;inset:0;background:rgba(8,16,28,.55);display:flex;align-items:flex-end;justify-content:center;z-index:30}
+.sheet{background:var(--sf);width:100%;max-width:480px;border-radius:26px 26px 0 0;padding:24px 20px calc(22px + env(safe-area-inset-bottom,0px))}
+.tour{position:fixed;left:12px;right:12px;bottom:calc(70px + env(safe-area-inset-bottom,0px));max-width:456px;margin:0 auto;background:var(--tx);color:var(--bg);border-radius:18px;padding:14px;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.tour button{border:0;font-size:13px;padding:8px 14px}.dots{display:flex;gap:5px;margin-bottom:8px}.dots i{height:4px;flex:1;border-radius:3px;background:rgba(128,128,128,.4)}.dots i.on{background:var(--br)}
+.toast{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:9px 16px;border-radius:999px;z-index:40;font-size:13.5px;font-weight:600;max-width:90%;box-shadow:var(--sh)}
+</style>
+</head>
+<body>
+<div id="app">
+ <div class="top"><div class="brand"><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="10" fill="var(--br)"/><path d="M16 6.5a7 7 0 0 0-7 7c0 5.2 7 11.5 7 11.5s7-6.3 7-11.5a7 7 0 0 0-7-7z" fill="var(--brtx)"/><circle cx="16" cy="13.5" r="2.6" fill="var(--br)"/></svg>Spotspeak</div>
+  <div class="row"><button id="bLang" class="pill" aria-label="Interface language"></button><button id="bTour" class="pill bp"></button></div></div>
+ <section class="hero" id="hero"></section>
+ <main id="main"></main>
+</div>
+<div id="tourBox"></div>
+<nav><div id="nav"></div></nav>
+<input type="file" id="fileSnap" accept="image/*" capture="environment" hidden>
+<input type="file" id="fileHunt" accept="image/*" capture="environment" hidden>
+<script>
+"use strict";
+var UI={en:{learn:"Learn",snap:"Snap",play:"Play",wallet:"Wallet",partners:"Partners",tag:"Learn the words of the place you are standing in.",tour:"30-sec demo",at:"You are at"},
+ku:{learn:"فێربوون",snap:"وێنە",play:"یاری",wallet:"جزدان",partners:"هاوبەشەکان",tag:"Learn the words of the place you are standing in.",tour:"30-sec demo",at:"You are at"}};
+var IC={learn:'<path d="M2 4h6a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h7z"/>',snap:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',play:'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',wallet:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',partners:'<path d="M3 9l1-5h16l1 5"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/>',spk:'<path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/>',chk:'<path d="M20 6L9 17l-5-5"/>',lock:'<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'};
+function ic(n){return'<svg class="i" viewBox="0 0 24 24" aria-hidden="true">'+IC[n]+"</svg>"}
+// Sorani words are DEMO DATA: a native speaker must verify them before real use.
+var P={
+airport:{n:"Erbil Airport",s:"Airport",emo:"✈️",v:"Sample Café (example venue)",offer:"10% off tea and sweets, 2–5 pm",sw:"Word of the day: gate",
+ w:[["passport","پاسپۆرت","🛂","Please show your passport."],["ticket","بلیت","🎫","I have a ticket to Dubai."],["bag","جانتا","🧳","This is my bag."],["gate","دەروازە","🚪","Where is gate four?"],["flight","فڕین","✈️","My flight is at noon."]]},
+cafe:{n:"Café",s:"Café",emo:"☕",v:"Sample Café (example venue)",offer:"10% off between 2 and 5 pm",sw:"Word of the day: sweet",
+ w:[["coffee","قاوە","☕","A coffee, please."],["tea","چا","🍵","I would like some tea."],["water","ئاو","💧","Can I have water?"],["menu","مینیو","📋","Can I see the menu?"],["sweet","شیرینی","🍰","One sweet, please."]]},
+hotel:{n:"Hotel",s:"Hotel",emo:"🏨",v:"Sample Hotel (example venue)",offer:"Free tea at the lobby café, 3–5 pm",sw:"Word of the day: breakfast",
+ w:[["room","ژوور","🚪","I have a room for two nights."],["key","کلیل","🔑","May I have my key?"],["bed","قەرەوێڵە","🛏️","The bed is very comfortable."],["breakfast","نانی بەیانی","🍳","What time is breakfast?"],["reception","پیشوازی","🛎️","Please call reception."]]},
+market:{n:"Market",s:"Market",emo:"🛒",v:"Sample Bakery (example venue)",offer:"10% off bread after 6 pm",sw:"Word of the day: cheap",
+ w:[["bread","نان","🍞","I want fresh bread."],["apple","سێو","🍎","One kilo of apples, please."],["tomato","تەماتە","🍅","The tomatoes are good."],["price","نرخ","🏷️","What is the price?"],["cheap","هەرزان","💸","This is cheap today."]]},
+hospital:{n:"Hospital",s:"Hospital",emo:"🏥",v:"Sample Pharmacy (example venue)",offer:"Partner offer: free staff English pack (B2B demo)",sw:"Word of the day: pain",
+ w:[["doctor","دکتۆر","🩺","I need to see a doctor."],["medicine","دەرمان","💊","I take this medicine daily."],["pain","ئێش","🤕","I have a pain here."],["nurse","پەرستار","🧑‍⚕️","The nurse is helping me."],["emergency","فریاکەوتن","🚑","This is an emergency."]]}
+};
+var RP=[["Good morning. May I see your passport?",/passport|here|yes|sure|ok|please/i,"Here is my passport, please."],
+["What is the purpose of your visit?",/tour|visit|holiday|vacation|work|study|business|family|ngo|conference|friend/i,"I am here for tourism."],
+["How long will you stay?",/\d|day|week|month|night|year/i,"I will stay for five days."]];
+var S={tab:"learn",place:"airport",ui:"en",dir:"en2ku",tour:-1,welcome:true,gps:true,pts:{},day:{},learned:{},book:[],coupons:[],snap:null,quiz:null,hunt:null,rp:null,sub:"quiz",pc:{bill:12,disc:10,red:60,ns:60,mar:65,sp:1,ven:40},key:""};
+var CAP=40;
+try{var u=localStorage.getItem("ss_ui");if(u)S.ui=u}catch(e){}
+function $(i){return document.getElementById(i)}
+function tr(k){return UI[S.ui][k]}
+function cur(){return P[S.place]}
+function tot(){var t=0;for(var k in S.pts)t+=S.pts[k];return t}
+function lrn(){return(S.learned[S.place]||[]).length}
+function toast(m){var d=document.createElement("div");d.className="toast";d.textContent=m;document.body.appendChild(d);setTimeout(function(){d.remove()},2200)}
+function say(t){try{var u=new SpeechSynthesisUtterance(t);u.lang="en-US";speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){toast("Audio is not available on this device")}}
+function award(n,why){
+ if(!S.gps){toast("Points need GPS at the venue (demo switch is off)");return 0}
+ var d=S.day[S.place]||0,g=Math.min(n,CAP-d);
+ if(g<=0){toast("Daily cap reached here ("+CAP+" pts). Come back tomorrow!");return 0}
+ S.day[S.place]=d+g;S.pts[S.place]=(S.pts[S.place]||0)+g;toast("+"+g+" pts · "+why);return g}
+function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function pair(w){return S.dir==="en2ku"?[w[0],w[1],false]:[w[1],w[0],true]}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+function head(){
+ var c=cur();$("bTour").textContent="▶ "+tr("tour");$("bTour").dir="ltr";$("bLang").textContent=S.ui==="en"?"کوردی":"English";
+ document.documentElement.dir=S.ui==="ku"?"rtl":"ltr";document.documentElement.lang=S.ui==="ku"?"ckb":"en";
+ var ch="";for(var k in P)ch+='<button class="c'+(k===S.place?" on":"")+'" data-place="'+k+'">'+P[k].emo+" "+P[k].s+"</button>";
+ $("hero").innerHTML='<div class="ht"><div><div class="eb">'+tr("at")+'</div><div class="h1">'+c.n+'</div><div class="hs">'+tr("tag")+'</div></div><div class="hi">'+c.emo+'</div></div><div class="chips">'+ch+'</div><div class="hb"><div class="sg"><button id="d1" class="'+(S.dir==="en2ku"?"on":"")+'">EN→KU</button><button id="d2" class="'+(S.dir==="ku2en"?"on":"")+'">KU→EN</button></div><span class="gps'+(S.gps?"":" off")+'"><i></i>'+(S.gps?"At venue":"Not at venue")+"</span></div>";
+ var n="";["learn","snap","play","wallet","partners"].forEach(function(t){n+='<button class="'+(S.tab===t?"on":"")+'" data-t="'+t+'"><b>'+ic(t)+"</b>"+tr(t)+"</button>"});$("nav").innerHTML=n}
+
+function vLearn(){
+ var c=cur(),L=S.learned[S.place]||[];
+ var h='<div class="sp"><span class="bd">Sponsored</span><h3 style="margin-top:8px">'+esc(c.v)+'</h3><div>'+esc(c.offer)+'</div><div class="tag" style="margin-top:4px">'+esc(c.sw)+' · '+(L.length>=c.w.length?"✓ Unlocked":"🔒 Unlocks after you learn all "+c.w.length+" words")+'</div></div>';
+ h+='<div class="row sb"><h2>'+esc(c.s)+' words</h2><span class="cnt">'+L.length+"/"+c.w.length+'</span></div><div class="bar"><i style="width:'+(100*L.length/c.w.length)+'%"></i></div>';
+ c.w.forEach(function(w,i){var p=pair(w),done=L.indexOf(i)>-1;
+  h+='<div class="wc"><div class="wi">'+w[2]+'</div><div class="wm"><div class="'+(p[2]?"w2 ku":"w1")+'">'+p[0]+'</div><div class="'+(p[2]?"w1":"w2 ku")+'">'+p[1]+'</div><div class="w3">“'+esc(w[3])+'”</div></div><div class="wa"><button class="ib" data-say="'+i+'" aria-label="Listen">'+ic("spk")+'</button><button class="ib'+(done?" dn":" bp")+'" data-learn="'+i+'" aria-label="I learned it">'+ic("chk")+"</button></div></div>"});
+ return h+'<div class="tag" style="margin-top:10px">Tap the speaker to hear the English word, then ✓ when you know it (+5 pts at the venue). Kurdish audio is planned.</div>'}
+
+function vSnap(){
+ var c=cur(),h='<h2>Snap an object</h2><div class="card"><div class="vf">'+ic("snap")+'<div style="margin:8px 0 12px"><b>Point at something in this place</b><div class="tag">Prototype: you confirm the object from the list. The real app uses a vision AI.</div></div><button class="bp" id="bPhoto">Take or upload photo</button></div>';
+ if(S.snap&&S.snap.img)h+='<img class="pv" src="'+S.snap.img+'" alt="Your photo">';
+ if(S.snap&&S.snap.img&&S.snap.i==null){h+='<div style="margin-top:6px"><b>Which one is it?</b></div>';c.w.forEach(function(w,i){h+='<span class="chip" data-pick="'+i+'">'+w[2]+" "+w[0]+"</span>"})}
+ h+='<div class="tag" style="margin-top:14px">No photo? Try a sample object:</div><div class="tiles">';c.w.forEach(function(w,i){h+='<button class="tile" data-sample="'+i+'" aria-label="'+w[0]+'">'+w[2]+"</button>"});h+="</div></div>";
+ if(S.snap&&S.snap.i!=null){var w=c.w[S.snap.i],saved=S.book.some(function(b){return b[0]===w[0]});
+  h+='<div class="card"><div class="row"><div class="wi" style="width:64px;height:64px;font-size:34px">'+w[2]+'</div><div><div class="tag">Recognised</div><div class="big">'+w[0]+'</div><div class="w2 ku">'+w[1]+'</div></div></div><div style="margin:8px 0" class="mu">“'+esc(w[3])+'”</div><div class="row"><button data-snapsay="1">'+ic("spk")+' Say it</button><button class="bp" data-save="1" '+(saved?"disabled":"")+">"+(saved?"✓ In word book":"Save to word book")+"</button></div></div>"}
+ h+='<div class="row sb"><h2>My word book</h2><span class="cnt">'+S.book.length+"</span></div>";if(!S.book.length)h+='<div class="tag">Saved words appear here.</div>';
+ S.book.forEach(function(b){h+='<div class="wc"><div class="wi">'+b[2]+'</div><div class="wm"><div class="w1">'+b[0]+'</div><div class="w2 ku">'+b[1]+"</div></div></div>"});return h}
+
+function vPlay(){
+ var h='<div class="seg2"><button data-sub="quiz" class="'+(S.sub==="quiz"?"on":"")+'">Word match</button><button data-sub="hunt" class="'+(S.sub==="hunt"?"on":"")+'">Scavenger</button><button data-sub="rp" class="'+(S.sub==="rp"?"on":"")+'">Role-play</button></div>';
+ return h+(S.sub==="quiz"?qView():S.sub==="hunt"?hView():rView())}
+function qNew(){S.quiz={i:0,s:0,q:shuf(cur().w.map(function(_,i){return i})),done:false,ans:null,pl:S.place}}
+function qView(){
+ if(!S.quiz||S.quiz.pl!==S.place)qNew();var q=S.quiz,c=cur();
+ if(q.done)return'<div class="card" style="text-align:center"><div class="tag">Your score</div><div class="big">'+q.s+" / "+c.w.length+'</div><div style="margin-top:12px"><button class="bp" data-qre="1">Play again</button></div></div>';
+ var w=c.w[q.q[q.i]],p=pair(w),o=shuf(c.w).slice(0,3);if(o.indexOf(w)<0)o[0]=w;o=shuf(o);
+ var h='<div class="card"><div class="row sb"><span class="tag">Question '+(q.i+1)+" of "+c.w.length+'</span><span class="cnt">'+q.s+' pts</span></div><div class="bar" style="margin:8px 0 14px"><i style="width:'+(100*q.i/c.w.length)+'%"></i></div><div style="text-align:center"><div style="font-size:44px">'+w[2]+'</div><div class="'+(p[2]?"w2 ku":"big")+'">'+p[0]+'</div><div class="tag">Pick the meaning</div></div>';
+ o.forEach(function(x){var px=pair(x),st="";if(q.ans){if(x===w)st=" ok";else if(q.ans===x)st=" bad"}h+='<button class="opt'+st+(px[2]?" ku":"")+'" data-qa="'+c.w.indexOf(x)+'">'+px[1]+"</button>"});
+ if(q.ans)h+='<div style="margin-top:12px"><button class="bp" data-qn="1">Next</button></div>';return h+"</div>"}
+function hNew(){S.hunt={pl:S.place,it:shuf(cur().w).slice(0,4),f:[],t:60,on:false,iv:null,cur:null}}
+function hView(){
+ if(!S.hunt||S.hunt.pl!==S.place)hNew();var H=S.hunt;
+ var h='<div class="card"><div class="row sb"><h3>Find and photograph 4 things</h3><span class="cnt"><span id="tm">'+H.t+'</span>s</span></div>';
+ H.it.forEach(function(w,i){var d=H.f.indexOf(i)>-1;h+='<div class="pr"><span>'+w[2]+" <b>"+w[0]+"</b></span>"+(d?'<span class="ok">✓ found</span>':'<span><button class="pill" data-hp="'+i+'">'+ic("snap")+'</button> <button class="pill" data-hd="'+i+'">demo ✓</button></span>')+"</div>"});
+ if(!H.on&&H.f.length<4)h+='<div style="margin-top:10px"><button class="bp" data-hs="1">Start timer</button></div>';
+ if(H.f.length===4)h+='<div class="ok" style="margin-top:10px"><b>All found! +20 pts at the venue 🎉</b></div>';
+ return h+'<div style="margin-top:10px"><button data-hn="1">New hunt</button></div></div>'}
+function hFound(i){var H=S.hunt;if(H.f.indexOf(i)<0)H.f.push(i);if(H.f.length===4){clearInterval(H.iv);H.on=false;award(20,"hunt complete")}render()}
+function rView(){
+ var R=S.rp;if(!R)R=S.rp={i:0,log:[],done:false};
+ var h='<div class="card"><h3>Passport control role-play</h3><div class="tag">Type your answers in English. +10 pts at the venue when you finish.</div>';
+ R.log.forEach(function(l){h+='<div style="margin-top:12px"><div><b>Officer:</b> '+esc(l[0])+'</div><div><b>You:</b> '+esc(l[1])+'</div><div class="'+(l[2]?"ok":"bad")+'">'+(l[2]?"✓ Good!":"Try: “"+esc(l[3])+"”")+"</div></div>"});
+ if(R.done)h+='<div class="ok" style="margin:12px 0"><b>Done! Welcome to Erbil 🎉</b></div><button data-rre="1">Again</button>';
+ else h+='<div style="margin-top:12px"><b>Officer:</b> '+esc(RP[R.i][0])+'</div><input type="text" id="rIn" placeholder="Type your answer…" style="margin-top:8px"><div class="row" style="margin-top:8px"><button class="bp" data-rs="1">Send</button><button data-rh="1">Hint</button></div><div class="tag" id="rHint"></div>';
+ return h+"</div>"}
+
+function vWallet(){
+ var c=cur(),L=lrn(),all=L>=c.w.length,t=tot(),d=S.day[S.place]||0;
+ var h='<div class="pts"><div class="eb">Your points</div><div class="big">'+t+'</div><div class="trk"><i style="width:'+Math.min(100,t/2.5)+'%"></i><u style="left:40%"></u><s style="left:40%">100 · 10% off</s><u style="left:100%"></u><s style="left:92%">250 · 15% + free</s></div></div>';
+ h+='<div class="card row sb" style="flex-wrap:nowrap"><div><b>At the venue (demo GPS)</b><div class="tag">The real app needs GPS to confirm you are there.</div></div><label class="sw"><input type="checkbox" id="gps" '+(S.gps?"checked":"")+' aria-label="At venue"><span></span></label></div>';
+ h+='<div class="card"><div class="row sb"><h3>'+esc(c.v)+'</h3><span class="cnt">'+d+"/"+CAP+' today</span></div><div class="bar" style="margin:10px 0"><i style="width:'+100*d/CAP+'%"></i></div><div class="'+(all?"ok":"mu")+'">'+(all?"✓ Words learned: discount unlocked":"🔒 Learn "+(c.w.length-L)+" more word(s) here to unlock “learn here, save here”.")+'</div><div class="tag">Discount hours are chosen by the venue (quiet hours).</div>';
+ [[100,"10% off"],[250,"15% off + free drink or sweet"]].forEach(function(r){h+='<div style="margin-top:10px"><button class="bp" style="width:100%" data-rd="'+r[0]+'" '+((t>=r[0]&&all&&S.gps)?"":"disabled")+">Redeem "+r[0]+" pts · "+r[1]+"</button></div>"});h+="</div>";
+ S.coupons.forEach(function(k){h+='<div class="cp"><div>'+(k.o.indexOf("15")===0?"15%":"10%")+'</div><div><b>'+esc(k.o)+'</b><div class="tag">'+esc(k.v)+'</div><div class="code">'+k.c+'</div><div class="tag">Show to staff. Ordering in Kurdish earns bonus points.</div></div></div>'});
+ return h+'<div class="card"><button data-boost="1">Demo only: +100 pts</button><div class="tag" style="margin-top:6px">Skips the daily cap so you can show a coupon in a 2-minute pitch.</div></div>'}
+
+function calc(){var p=S.pc,b=p.bill,d=p.disc/100,r=p.red,m=p.mar/100,fees=r*0.5,sp=p.sp?40:0,N=r*p.ns/100;
+ var disc=r*b*d,newSales=N*b*(1-d),net=N*b*m-fees-sp-disc,be=(fees+sp+disc)/(b*m),ven=fees+sp;
+ return{fees:fees,sp:sp,disc:disc,newSales:newSales,net:net,be:Math.ceil(be),ven:ven,app:ven*p.ven}}
+function fm(x){return"$"+Math.round(x).toLocaleString("en-US")}
+function vPartners(){
+ var h='<h2>How venues and Spotspeak earn</h2><div class="card">';
+ [["Pay per visit","$0.50 per coupon"],["Sponsored place","$40 / month"],["Menu as a lesson","$60 once"],["Language night","$80 / event"],["Learner premium","AI speaking, offline"],["Staff training packs","airports, hotels, clinics"]].forEach(function(r){h+='<div class="pr"><span>'+r[0]+"</span><span>"+r[1]+"</span></div>"});
+ h+='<div class="tag" style="margin-top:6px">All prices are example assumptions. Learners use the app free.</div></div><div class="card"><h3>Venue calculator</h3><div class="tag">Example numbers. Move the sliders.</div>';
+ [["bill","Average bill ($)",5,40,1],["disc","Discount (%)",5,20,5],["red","Redemptions per month",10,150,5],["ns","New customers (%)",10,100,5],["mar","Gross margin (%)",30,80,5],["ven","Paying venues (app owner)",5,100,5]].forEach(function(f){h+='<label class="f">'+f[1]+': <b id="v_'+f[0]+'">'+S.pc[f[0]]+'</b><input type="range" data-pc="'+f[0]+'" min="'+f[2]+'" max="'+f[3]+'" step="'+f[4]+'" value="'+S.pc[f[0]]+'"></label>'});
+ h+='<label class="f row" style="gap:8px"><input type="checkbox" data-pcsp="1" '+(S.pc.sp?"checked":"")+"> Include sponsored place ($40)</label><div id=\"calcOut\"></div></div>";return h}
+function calcOut(){var c=calc();$("calcOut").innerHTML='<h3 style="margin-top:16px">For the venue</h3><div class="kp"><div><small>Fees</small><b>'+fm(c.fees)+'</b></div><div><small>Discounts</small><b>'+fm(c.disc)+'</b></div><div><small>Sponsored</small><b>'+fm(c.sp)+'</b></div><div><small>Sales from new</small><b>'+fm(c.newSales)+'</b></div></div><p style="margin:10px 0 0">Net gain: <b class="'+(c.net>=0?"ok":"bad")+'">'+fm(c.net)+' / month</b><br>Break-even: <b>'+c.be+'</b> new customers of '+S.pc.red+" ("+Math.round(100*c.be/S.pc.red)+'%)</p><h3 style="margin-top:16px">For Spotspeak</h3><div class="kp"><div><small>Per venue</small><b>'+fm(c.ven)+'</b></div><div><small>'+S.pc.ven+' venues</small><b>'+fm(c.app)+'</b></div></div><div class="tag" style="margin-top:8px">Revenue, not profit. Net gain uses gross margin, not sales.</div>'}
+
+var TOUR=[["learn","You are at the airport. Spotspeak shows the words of this place."],["learn","Tap the speaker to listen, then ✓ when you know the word."],["snap","Tap a sample object (or take a photo). The app names it and saves it."],["play","Try the quiz, the scavenger hunt or the passport role-play."],["wallet","Points count only at the venue. Use the demo boost, then redeem a coupon."],["partners","Venues pay for visits and ads. Move the sliders to see the numbers."]];
+function overlay(){var b=$("tourBox");
+ if(S.welcome){b.innerHTML='<div class="ov"><div class="sheet"><div class="brand" style="margin-bottom:12px"><svg width="36" height="36" viewBox="0 0 32 32"><rect width="32" height="32" rx="10" fill="var(--br)"/><path d="M16 6.5a7 7 0 0 0-7 7c0 5.2 7 11.5 7 11.5s7-6.3 7-11.5a7 7 0 0 0-7-7z" fill="var(--brtx)"/><circle cx="16" cy="13.5" r="2.6" fill="var(--br)"/></svg>Spotspeak</div><div class="big" style="font-size:24px;line-height:1.2">Learn the words of the place you are standing in.</div><div class="pr" style="margin-top:14px"><span>📍 Arrive</span><span style="color:var(--mu);font-weight:500">get the place’s words</span></div><div class="pr"><span>📷 Snap</span><span style="color:var(--mu);font-weight:500">AI names any object</span></div><div class="pr"><span>🎟️ Save</span><span style="color:var(--mu);font-weight:500">learn here, save here</span></div><div class="row" style="margin-top:16px"><button class="bp" style="flex:1;padding:13px" data-ws="1">Start 30-second demo</button><button style="padding:13px" data-wx="1">Explore</button></div><div class="tag" style="margin-top:10px">Prototype for a class pitch. Prices and offers are examples.</div></div></div>';return}
+ if(S.tour<0){b.innerHTML="";return}
+ var d="";for(var i=0;i<6;i++)d+='<i class="'+(i<=S.tour?"on":"")+'"></i>';
+ b.innerHTML='<div class="tour"><div class="dots">'+d+'</div><div>'+TOUR[S.tour][1]+'</div><div class="row sb" style="margin-top:10px"><button data-tx="1">Skip</button><button class="bp" data-tn="1">'+(S.tour===5?"Finish":"Next →")+"</button></div></div>"}
+function tourGo(i){S.welcome=false;S.tour=i;if(i>=0){S.tab=TOUR[i][0];if(i<=1)S.place="airport"}render()}
+
+function render(){head();var m=$("main"),k=S.tab+S.place+S.sub+S.ui;
+ m.innerHTML=S.tab==="learn"?vLearn():S.tab==="snap"?vSnap():S.tab==="play"?vPlay():S.tab==="wallet"?vWallet():vPartners();
+ if(S.tab==="partners")calcOut();overlay();if(k!==S.key){S.key=k;window.scrollTo(0,0)}}
+
+document.addEventListener("click",function(e){var t=e.target.closest("[data-t],[data-place],[data-say],[data-learn],[data-pick],[data-sample],[data-snapsay],[data-save],[data-sub],[data-qa],[data-qn],[data-qre],[data-hs],[data-hp],[data-hd],[data-hn],[data-rs],[data-rh],[data-rre],[data-rd],[data-boost],[data-tn],[data-tx],[data-ws],[data-wx],#bPhoto,#bTour,#bLang,#d1,#d2");if(!t)return;
+ var D=t.dataset,c=cur();
+ if(D.t){S.tab=D.t;render()}
+ else if(D.place){S.place=D.place;S.quiz=null;if(S.hunt)clearInterval(S.hunt.iv);S.hunt=null;S.snap=null;render()}
+ else if(D.ws!=null)tourGo(0);else if(D.wx!=null){S.welcome=false;render()}
+ else if(t.id==="bTour")tourGo(0);else if(t.id==="bLang"){S.ui=S.ui==="en"?"ku":"en";try{localStorage.setItem("ss_ui",S.ui)}catch(x){}render()}
+ else if(t.id==="d1"){S.dir="en2ku";S.quiz=null;render()}else if(t.id==="d2"){S.dir="ku2en";S.quiz=null;render()}
+ else if(D.tn!=null){S.tour>=5?tourGo(-1):tourGo(S.tour+1)}else if(D.tx!=null)tourGo(-1);
+ else if(D.say!=null)say(c.w[+D.say][0]);
+ else if(D.learn!=null){var L=S.learned[S.place]=S.learned[S.place]||[],i=+D.learn;if(L.indexOf(i)<0){L.push(i);award(5,"new word")}render()}
+ else if(t.id==="bPhoto")$("fileSnap").click();
+ else if(D.pick!=null){S.snap.i=+D.pick;render()}
+ else if(D.sample!=null){S.snap={img:null,i:+D.sample};render()}
+ else if(D.snapsay)say(c.w[S.snap.i][0]);
+ else if(D.save){var w=c.w[S.snap.i];S.book.push([w[0],w[1],w[2]]);award(2,"saved a word");render()}
+ else if(D.sub){S.sub=D.sub;render()}
+ else if(D.qa!=null){var q=S.quiz;if(q.ans)return;var x=c.w[+D.qa];q.ans=x;if(x===c.w[q.q[q.i]]){q.s++;award(5,"correct")}render()}
+ else if(D.qn){var q2=S.quiz;q2.ans=null;q2.i++;if(q2.i>=c.w.length)q2.done=true;render()}
+ else if(D.qre){qNew();render()}
+ else if(D.hs){var H=S.hunt;H.on=true;H.iv=setInterval(function(){H.t--;var el=$("tm");if(el)el.textContent=H.t;if(H.t<=0){clearInterval(H.iv);H.on=false;toast("Time is up!");render()}},1000);render()}
+ else if(D.hp!=null){S.hunt.cur=+D.hp;$("fileHunt").click()}
+ else if(D.hd!=null)hFound(+D.hd);
+ else if(D.hn){if(S.hunt)clearInterval(S.hunt.iv);hNew();render()}
+ else if(D.rs){var inp=$("rIn"),v=inp.value.trim();if(!v)return;var R=S.rp,st=RP[R.i],ok=st[1].test(v);R.log.push([st[0],v,ok,st[2]]);if(ok){R.i++;if(R.i>=RP.length){R.done=true;award(10,"role-play done")}}render()}
+ else if(D.rh){$("rHint").textContent="Example: “"+RP[S.rp.i][2]+"”"}
+ else if(D.rre){S.rp=null;render()}
+ else if(D.rd){var n=+D.rd;if(tot()<n)return;var left=n;Object.keys(S.pts).forEach(function(k){var x=Math.min(S.pts[k],left);S.pts[k]-=x;left-=x});
+  S.coupons.unshift({o:n===100?"10% off":"15% off + free drink or sweet",v:c.v,c:"SP-"+Math.floor(1000+Math.random()*9000)});toast("Coupon created!");render()}
+ else if(D.boost){S.pts[S.place]=(S.pts[S.place]||0)+100;render()}
+});
+document.addEventListener("change",function(e){var t=e.target;
+ if(t.id==="gps"){S.gps=t.checked;render()}
+ else if(t.dataset.pcsp){S.pc.sp=t.checked?1:0;calcOut()}
+ else if(t.id==="fileSnap"&&t.files[0]){var fr=new FileReader();fr.onload=function(){S.snap={img:fr.result,i:null};t.value="";render()};fr.readAsDataURL(t.files[0])}
+ else if(t.id==="fileHunt"&&t.files[0]){t.value="";hFound(S.hunt.cur)}});
+document.addEventListener("input",function(e){var t=e.target;if(t.dataset&&t.dataset.pc){S.pc[t.dataset.pc]=+t.value;$("v_"+t.dataset.pc).textContent=t.value;calcOut()}});
+document.addEventListener("keydown",function(e){if(e.key==="Enter"&&e.target.id==="rIn"){var b=document.querySelector("[data-rs]");if(b)b.click()}});
+render();
+</script>
+</body>
+</html>
